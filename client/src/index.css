@@ -20,3 +20,16 @@
   padding: 2em;
   /* background-color: #fff; */
 }
+.button{
+  width: 80px;
+  height: 45px;
+  background-color: lightgray;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  padding-top: 15px;
+}
+.iframe{
+  border: 0px;
+  background-color: #fff;
+}

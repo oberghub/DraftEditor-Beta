@@ -9,17 +9,25 @@ import { dracula } from '@uiw/codemirror-theme-dracula';
 
 const App = () => {
   const [htmlText, setHtmlText] = useState("")
-  const [jsText, setJsText] = useState("console.log('hello world!');")
-  const onChange = React.useCallback((value, viewUpdate) => {
-    // console.log(value)
-    setJsText(value)
-  }, [])
+  const [cssText, setCssText] = useState("")
+  const [jsText, setJsText] = useState("")
+
+  const [selectTab, setSelectTab] = useState("HTML")
+
+  const [tabValue, setTabValue] = useState(["HTML", "CSS", "JS"])
+  const srcDoc = `
+  <html>
+      <body>${htmlText}</body>
+      <style>${cssText}</style>
+      <script>${jsText}</script>
+  </html>
+`
   const submitjs = () => {
     exportFile("text/javascript")
   }
   const exportFile = (fileType) => {
     const blob = new Blob([jsText], {
-      type : fileType
+      type: fileType
     })
     const fileUrl = URL.createObjectURL(blob)
     const link = document.createElement("a")
@@ -27,43 +35,60 @@ const App = () => {
     link.href = fileUrl
     link.click()
   }
-  // const html_Code_Editor_onChange = useCallback((editor, change) => {
-  //   console.log(editor.getValue())
-  // })
   return (
-    <div>
+    <>
       <div className='container'>
-        <div className='code-box'>
-          <CodeMirror
-            value={jsText}
-            theme={dracula}
-            extensions={[javascript({ jsx: true })]}
-            onChange={onChange}
+        <div>
+          <div className='code-box'>
+            <CodeMirror
+              theme={dracula}
+              extensions={[html(htmlLanguage)]}
+              onChange={(value, viewUpdate) => {
+                setHtmlText(value)
+              }}
+              placeholder={"HTML Language"}
+            />
+          </div>
+          <div className='code-box'>
+            <CodeMirror
+              theme={dracula}
+              extensions={[css()]}
+              onChange={(value, viewUpdate) => {
+                setCssText(value)
+              }}
+            />
+          </div>
+          <div className="code-box">
+            <CodeMirror
+              theme={dracula}
+              extensions={[javascript({ jsx: true })]}
+              onChange={(value, viewUpdate) => {
+                setJsText(value)
+              }}
+            />
+          </div>
+        </div>
+        <div className="code-box">
+          <iframe
+            srcDoc={srcDoc}
+            title="output"
+            sandbox="allow-scripts"
+            width="100%"
+            height="100%"
+            className='iframe'
           />
         </div>
-        {/* <div className='code-box'>
-          <CodeMirror
-            value="<html></html>"
-            theme={dracula}
-            extensions={[html(htmlLanguage)]}
-            onChange={(value, viewUpdate) => {
-              console.log(value)
-            }}
-            placeholder={"HTML Language"}
-          />
-        </div> */}
-        {/* <div className='code-box'>
-          <CodeMirror
-            value=".container{}"
-            theme={dracula}
-            extensions={[css()]}
-            onChange={onChange}
-          />
-        </div> */}
       </div>
-      <div style={{width : '60px', height : '30px', backgroundColor : 'lightblue', marginLeft : '2em'}} onClick={submitjs}>
+      <div style={{ display: 'flex', width: '300px', marginLeft: '2em', gap: '10px' }}>
+        {tabValue.map((item) => {
+          return (
+            <div className='button' style={{ backgroundColor: 'gray' }} onClick={() => { setSelectTab(item) }}>
+              {item}
+            </div>
+          )
+        })}
       </div>
-    </div>
+    </>
   );
 }
 export default App
