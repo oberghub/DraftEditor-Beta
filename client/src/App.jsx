@@ -79,7 +79,7 @@ const App = () => {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', width: '300px', marginLeft: '2em', gap: '10px' }}>
+      {/* <div style={{ display: 'flex', width: '300px', marginLeft: '2em', gap: '10px' }}>
         {tabValue.map((item) => {
           return (
             <div className='button' style={{ backgroundColor: 'gray' }} onClick={() => { setSelectTab(item) }}>
@@ -87,7 +87,7 @@ const App = () => {
             </div>
           )
         })}
-      </div>
+      </div> */}
     </>
   );
 }
