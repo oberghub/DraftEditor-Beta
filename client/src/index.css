@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background-color: rgb(35, 35, 35);
+  font-family: 'Kanit', sans-serif;
 }
 .code-box{
   overflow-y: scroll;
@@ -20,6 +22,20 @@
   padding: 2em;
   /* background-color: #fff; */
 }
+.top-container{
+  width: 100%;
+  height: 80px;
+  /* background-color: wheat; */
+  padding: 2em;
+  display: flex;
+  border-bottom: 0.5px solid rgb(68, 68, 68);
+  position: relative;
+}
+.text-top-container{
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+}
 .button{
   width: 80px;
   height: 45px;
@@ -32,4 +48,10 @@
 .iframe{
   border: 0px;
   background-color: #fff;
+}
+.container-overflow{
+  overflow-x: hidden;
+  width : 100%;
+  height : 700px;
+  position: relative;
 }

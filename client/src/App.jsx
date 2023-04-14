@@ -11,10 +11,6 @@ const App = () => {
   const [htmlText, setHtmlText] = useState("")
   const [cssText, setCssText] = useState("")
   const [jsText, setJsText] = useState("")
-
-  const [selectTab, setSelectTab] = useState("HTML")
-
-  const [tabValue, setTabValue] = useState(["HTML", "CSS", "JS"])
   const srcDoc = `
   <html>
       <body>${htmlText}</body>
@@ -37,38 +33,56 @@ const App = () => {
   }
   return (
     <>
+    <div className="top-container">
+      <div className='text-top-container'>Back</div>
+      <div className='text-top-container' style={{position : 'absolute', left : '50%'}}>
+        DraftEditor (Demo)
+      </div>
+      <div className='text-top-container' style={{position : 'absolute', right : "1.5em", cursor: "pointer"}}>
+        Help
+      </div>
+    </div>
       <div className='container'>
-        <div>
-          <div className='code-box'>
+        <div className="container-overflow">
+          <div style={{width : '100%', height : '40px', color : 'white', fontSize : '18px', position : 'sticky', top : 0,
+                      zIndex : 50}}>
+              Insert Code Here
+          </div>
+          <div className='code-box' style={{overflow : 'hidden'}}>
             <CodeMirror
               theme={dracula}
               extensions={[html(htmlLanguage)]}
               onChange={(value, viewUpdate) => {
                 setHtmlText(value)
               }}
-              placeholder={"HTML Language"}
+              placeholder={"HTML"}
             />
           </div>
-          <div className='code-box'>
+          <div className='code-box' style={{overflow : 'hidden'}}>
             <CodeMirror
               theme={dracula}
               extensions={[css()]}
               onChange={(value, viewUpdate) => {
                 setCssText(value)
               }}
+              placeholder={"CSS"}
             />
           </div>
-          <div className="code-box">
+          <div className="code-box" style={{overflow : 'hidden'}}>
             <CodeMirror
               theme={dracula}
               extensions={[javascript({ jsx: true })]}
               onChange={(value, viewUpdate) => {
                 setJsText(value)
               }}
+              placeholder={"JS"}
             />
           </div>
         </div>
-        <div className="code-box">
+        <div className="code-box" style={{overflow : 'hidden', border : 'none'}}>
+          <div style={{width : '100%', height : '40px', color : 'white', fontSize : '18px'}}>
+            Output
+          </div>
           <iframe
             srcDoc={srcDoc}
             title="output"
@@ -79,15 +93,12 @@ const App = () => {
           />
         </div>
       </div>
-      {/* <div style={{ display: 'flex', width: '300px', marginLeft: '2em', gap: '10px' }}>
-        {tabValue.map((item) => {
-          return (
-            <div className='button' style={{ backgroundColor: 'gray' }} onClick={() => { setSelectTab(item) }}>
-              {item}
-            </div>
-          )
-        })}
-      </div> */}
+      <div style={{width : "100%", height : "100px", paddingLeft : "2em"}}>
+        <div style={{width : '120px', padding : '10px', height : '45px', backgroundColor : '#5cb86b', color : 'white', textAlign : 'center',
+                    borderRadius : '5px', cursor : 'pointer'}}>
+              Export As Zip
+        </div>
+      </div>
     </>
   );
 }
