@@ -9,64 +9,59 @@ import {doc, addDoc, getDocs, collection, query} from "@firebase/firestore"
 
 
 function Home() {
-    const [itemRooms, setItemRooms] = useState([]);
-    const [roomMapped, setRoomMapped] = useState(itemRooms)
+    // const [itemRooms, setItemRooms] = useState([]);
+    const [roomMapped, setRoomMapped] = useState([])
     //read
     useEffect(() => {
         async function getData() {
-            const itemRoom = []
+            const arr = []
             await getDocs(collection(firestore, "roomData")).then(querySnapshot => {
                 querySnapshot.forEach((doc) => {
-                    itemRoom.push(doc.data())
+                    arr.push(doc.data())
                 });
-                setItemRooms(itemRoom)
+                setRoomMapped(() => arr)
             })
         }
         getData()
-    }, [itemRooms])
-    console.log(itemRooms)
-    console.log(roomMapped)
+    }, [])
+    // console.log("Look This ");
+    // console.log(roomMapped)
 
     
     const navigate = useNavigate()
     const [createRoomModal, setCreateRoomModal] = useState(false)
-    const [roomData, setRoomData] = useState([
-        {
-            title: "หัดใช้ภาษา python",
-            timeStamp: "01/05/2023",
-            template: "Python",
-        },
-        {
-            title: "สี่เหลี่ยมสีแดง",
-            timeStamp: "01/05/2023",
-            template: "HTML",
-        }
-    ])
+
     const template = ["Basic Website", "Python", "C", "Javascript", "Java"]
     const [roomName, setRoomName] = useState("")
     const [selectedTemplate, setSelectedTemplate] = useState("")
     
     const setOptionState = (state, index) => {
-        //let arr = [...roomMapped]
+        let arr = [...roomMapped]
         arr[index].optionState = state
-        //setRoomMapped(arr)
+        setRoomMapped(arr)
     }
     
     const createDraft = () => {
-        //let arr = [...roomMapped]
+        let arr = [...roomMapped]
         arr.push({
             title : roomName,
-            timeStamp : '15/4/2023',
+            timeStamp : getTimeStamp,
             template : selectedTemplate,
             optionState : false
         })
-        //setRoomMapped(() => arr)
+        setRoomMapped(() => arr)
     }
     const nameChange = (event) => {
         setRoomName(event.target.value)
     }
     const templateChange = (event) => {
         setSelectedTemplate(event)
+    }
+    const getTimeStamp = () => {
+        let date = new Date()
+        let splitDate = date.toString().split(" ")
+        let retDate = `${splitDate[2]} ${splitDate[1]} ${splitDate[3]}`
+        return retDate
     }
    
     return (
@@ -109,7 +104,7 @@ function Home() {
             <div style={{ maxWidth: '100%', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '1660px', display: 'flex', padding: '2em', borderBottom: '0.5px solid gray' }}>
                     <div style={{ width: '100%', color: 'white', }}>
-                        <div style={{ fontSize: '24px' }}>
+                        <div style={{ fontSize: '24px' }} onClick={() => {getTimeStamp()}}>
                             DraftEditor (Beta)
                         </div>
                     </div>
