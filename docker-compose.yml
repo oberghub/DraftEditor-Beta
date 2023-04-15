@@ -1,0 +1,13 @@
+services:
+  cilent:
+    build: client
+    image: oberghub/drafteditor:lastest
+    ports:
+      - "8081:80"
+    container_name: drafteditor-beta
+  # server:
+  #   build: server
+  #   image: oberghub/image-server:lastest
+  #   ports:
+  #     - "8085:80"
+  #   container_name: my-server

@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
-
+@import "react-widgets/styles.css";
 
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: rgb(35, 35, 35);
+  /* background-color: rgb(35, 35, 35); */
+  color: #353535;
   font-family: 'Kanit', sans-serif;
 }
 .code-box{
@@ -23,7 +24,7 @@
   width: 100%;
   height: auto;
   padding: 2em;
-  /* background-color: #fff; */
+  background-color: #e1e1e1;
 }
 .top-container{
   width: 100%;
@@ -33,10 +34,11 @@
   display: flex;
   border-bottom: 0.5px solid rgb(68, 68, 68);
   position: relative;
+  justify-content: space-between;
 }
 .text-top-container{
-  color: #fff;
-  font-size: 24px;
+  color: #353535;
+  font-size: 20px;
   font-weight: 500;
 }
 .button{
@@ -57,6 +59,7 @@
   width : 100%;
   height : 700px;
   position: relative;
+  background-color: #e1e1e1;
 }
 
 .overlay {
@@ -64,19 +67,18 @@
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 40;
 }
 
 .modalcontainer {
-  max-width: 800px;
-  width: 100%; 
-  position: fixed;
-  top: 40%;
+  width: 80%; 
+  position: absolute;
+  top: 50%;
   left: 50%;
+  z-index: 100;
   transform: translate(-50%, -50%);
-  display: flex;
-  background-color: #fff;
   box-shadow: 0px 0px 18px 0px #000;
+  background-color: #fff;
 }
 
 .modalLeft {
