@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { Combobox, DropdownList } from 'react-widgets';
 
@@ -30,8 +30,11 @@ function Home() {
         arr[index].optionState = state
         setRoomMapped(arr)
     }
+    // useEffect(() => {
+
+    // }, [roomData])
     const createDraft = () => {
-        let arr = [...roomData]
+        let arr = [...roomMapped]
         arr.push({
             title : roomName,
             timeStamp : '15/4/2023',
@@ -39,7 +42,7 @@ function Home() {
             optionState : false
         })
         console.log(arr)
-        setRoomData(arr)
+        setRoomMapped(() => mapRoom())
     }
     const nameChange = (event) => {
         setRoomName(event.target.value)
