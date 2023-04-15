@@ -4,13 +4,16 @@ import { javascript } from '@codemirror/lang-javascript';
 import { html, htmlLanguage } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { dracula } from '@uiw/codemirror-theme-dracula';
-
+import Modal from './modal'
 
 
 const App = () => {
   const [htmlText, setHtmlText] = useState("")
   const [cssText, setCssText] = useState("")
   const [jsText, setJsText] = useState("")
+
+  const [openModal, setOpenModal] = useState(false)
+
   const srcDoc = `
   <html>
       <body>${htmlText}</body>
@@ -33,16 +36,17 @@ const App = () => {
   }
   return (
     <>
+    <Modal open={openModal} onClose={() => setOpenModal(false)}></Modal>
     <div className="top-container">
       <div className='text-top-container'>Back</div>
       <div className='text-top-container' style={{position : 'absolute', left : '50%'}}>
         DraftEditor (Demo)
       </div>
-      <div className='text-top-container' style={{position : 'absolute', right : "1.5em", cursor: "pointer"}}>
+      <div className='text-top-container' onClick={() => setOpenModal(true)} style={{position : 'absolute', right : "1.5em", cursor: "pointer"}}>
         Help
       </div>
     </div>
-      <div className='container'>
+      <div className='containers'>
         <div className="container-overflow">
           <div style={{width : '100%', height : '40px', color : 'white', fontSize : '18px', position : 'sticky', top : 0,
                       zIndex : 50}}>
