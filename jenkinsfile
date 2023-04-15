@@ -24,7 +24,7 @@ pipeline{
         }
         stage("to-slave"){
             steps{
-                build job: 'DraftEditor-Master'
+                build job: 'DraftEditor-Slave'
             }
         }
     }
