@@ -1,8 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { Combobox, DropdownList } from 'react-widgets';
 
+//for test firebase
+import { firestore } from './firebase.js';
+import {doc, addDoc, getDocs, collection, query} from "@firebase/firestore"
+//for test firebase
+
+
 function Home() {
+    const [itemRooms, setItemRooms] = useState([]);
+    const [roomMapped, setRoomMapped] = useState(itemRooms)
+    //read
+    useEffect(() => {
+        async function getData() {
+            const itemRoom = []
+            await getDocs(collection(firestore, "roomData")).then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    itemRoom.push(doc.data())
+                });
+                setItemRooms(itemRoom)
+            })
+        }
+        getData()
+    }, [itemRooms])
+    console.log(itemRooms)
+    console.log(roomMapped)
+
+    
     const navigate = useNavigate()
     const [createRoomModal, setCreateRoomModal] = useState(false)
     const [roomData, setRoomData] = useState([
@@ -20,29 +45,22 @@ function Home() {
     const template = ["Basic Website", "Python", "C", "Javascript", "Java"]
     const [roomName, setRoomName] = useState("")
     const [selectedTemplate, setSelectedTemplate] = useState("")
-    const mapRoom = () => {
-        let arr2 = roomData.map((item => Object.assign(item, { optionState: false })))
-        console.log(arr2);
-        return arr2
-    }
+    
     const setOptionState = (state, index) => {
-        let arr = [...roomMapped]
+        //let arr = [...roomMapped]
         arr[index].optionState = state
-        setRoomMapped(arr)
+        //setRoomMapped(arr)
     }
-    // useEffect(() => {
-
-    // }, [roomData])
+    
     const createDraft = () => {
-        let arr = [...roomMapped]
+        //let arr = [...roomMapped]
         arr.push({
             title : roomName,
             timeStamp : '15/4/2023',
             template : selectedTemplate,
             optionState : false
         })
-        // console.log(arr)
-        setRoomMapped(() => arr)
+        //setRoomMapped(() => arr)
     }
     const nameChange = (event) => {
         setRoomName(event.target.value)
@@ -50,7 +68,7 @@ function Home() {
     const templateChange = (event) => {
         setSelectedTemplate(event)
     }
-    const [roomMapped, setRoomMapped] = useState(mapRoom)
+   
     return (
         <>
             {createRoomModal ?
@@ -99,7 +117,7 @@ function Home() {
             </div>
             <div style={{ maxWidth: '100%', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '1660px', display: 'flex', justifyContent: 'space-between', color: 'white', padding: '2em' }}>
-                    <div style={{ fontSize: '22px' }} onClick={mapRoom}>
+                    <div style={{ fontSize: '22px' }}>
                         กระดานของฉัน
                     </div>
                     <div style={{
