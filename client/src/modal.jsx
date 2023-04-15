@@ -23,7 +23,7 @@ const Modal = ({ open, onClose }) => {
     if (!open) return null;
     return (
         <div className="overlay">
-            <div className="modalcontainer" style={{ padding: '2em', position: 'relative' }}>
+            <div className="modalcontainer" style={{ padding: '2em', position: 'relative', width: '900px', height: '600px' }}>
                 <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ color: '#353535', fontSize: '24px' }}>ช่วยเหลือ (ตัวอย่าง)</div>
                     <div style={{ cursor: 'pointer', color: '#353535', fontSize: '24px' }} onClick={onClose}>X</div>

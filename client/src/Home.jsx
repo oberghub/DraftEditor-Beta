@@ -18,6 +18,8 @@ function Home() {
         }
     ])
     const template = ["Basic Website", "Python", "C", "Javascript", "Java"]
+    const [roomName, setRoomName] = useState("")
+    const [selectedTemplate, setSelectedTemplate] = useState("")
     const mapRoom = () => {
         let arr2 = roomData.map((item => Object.assign(item, { optionState: false })))
         console.log(arr2);
@@ -27,6 +29,23 @@ function Home() {
         let arr = [...roomMapped]
         arr[index].optionState = state
         setRoomMapped(arr)
+    }
+    const createDraft = () => {
+        let arr = [...roomData]
+        arr.push({
+            title : roomName,
+            timeStamp : '15/4/2023',
+            template : selectedTemplate,
+            optionState : false
+        })
+        console.log(arr)
+        setRoomData(arr)
+    }
+    const nameChange = (event) => {
+        setRoomName(event.target.value)
+    }
+    const templateChange = (event) => {
+        setSelectedTemplate(event)
     }
     const [roomMapped, setRoomMapped] = useState(mapRoom)
     return (
@@ -45,7 +64,22 @@ function Home() {
                             <Combobox
                                 placeholder='โปรดเลือก'
                                 data={template}
+                                onChange={templateChange}
                             ></Combobox>
+                            <div style={{ width: '100%', marginTop: '15px', marginBottom: '10px', color: '#353535' }}>
+                                ตั้งชื่องานของคุณ
+                            </div>
+                            <input type='text' style={{
+                                width: '100%', border: '1px solid lightgray', borderRadius: '3px', height: '40px', fontSize: '16px',
+                                paddingLeft: '15px'
+                            }} onChange={nameChange} required />
+                            <div style={{
+                                width: '100px', height: '40px', cursor: 'pointer',
+                                backgroundColor: '#5cb86b', color: 'white', borderRadius: '5px', display: 'flex',
+                                justifyContent: 'center', alignItems: 'center', position : 'absolute', right : 20, bottom : 20
+                            }} onClick={() => { setCreateRoomModal(false), createDraft() }}>
+                                ยืนยัน
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,7 +118,7 @@ function Home() {
                     {roomMapped.map((item, index) => {
                         return (
                             <>
-                                <div style={{ width: '100%', height: '200px', backgroundColor: '#e1e1e1', position: 'relative' }}>
+                                <div key={item} style={{ width: '100%', height: '200px', backgroundColor: '#e1e1e1', position: 'relative' }}>
                                     <div style={{
                                         width: '100%', display: 'flex', justifyContent: 'space-between', backgroundColor: 'transparent',
                                         padding: '1em', color: 'white'

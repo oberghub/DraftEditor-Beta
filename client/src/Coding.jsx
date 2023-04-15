@@ -36,6 +36,13 @@ const Coding = () => {
         link.href = fileUrl
         link.click()
     }
+    const [saved, setSaved] = useState("บันทึก")
+    const saveDraft = () => {
+        setSaved("บันทึกแล้ว")
+        setInterval(() => {
+            setSaved("บันทึก")
+        }, 1500);
+    }
     return (
         <>
             <Modal open={openModal} onClose={() => setOpenModal(false)}></Modal>
@@ -90,7 +97,7 @@ const Coding = () => {
                 <div className="code-box" style={{ overflow: 'hidden', border: 'none', backgroundColor : '#e1e1e1' }}>
                     <div style={{ width: '100%', height: '40px', color: '#353535', fontSize: '18px', display : 'flex', justifyContent : 'space-between', backgroundColor : '#e1e1e1' }}>
                         <div>ผลลัพธ์</div>
-                        <div>บันทึก</div>
+                        <div style={{cursor : 'pointer', fontWeight : '600'}} onClick={saveDraft}>{saved}</div>
                     </div>
                     <iframe
                         srcDoc={srcDoc}
