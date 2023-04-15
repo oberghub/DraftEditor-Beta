@@ -41,8 +41,8 @@ function Home() {
             template : selectedTemplate,
             optionState : false
         })
-        console.log(arr)
-        setRoomMapped(() => mapRoom())
+        // console.log(arr)
+        setRoomMapped(() => arr)
     }
     const nameChange = (event) => {
         setRoomName(event.target.value)
