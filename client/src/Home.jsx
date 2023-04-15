@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Combobox, DropdownList } from 'react-widgets';
 
 //for test firebase
-import { firestore } from './firebase.js';
-import {doc, addDoc, getDocs, collection, query} from "@firebase/firestore"
+import { firebase} from './firebase.js';
+import {doc, addDoc, getDocs, collection, serverTimestamp} from "@firebase/firestore"
 //for test firebase
 
 
@@ -15,7 +15,9 @@ function Home() {
     useEffect(() => {
         async function getData() {
             const arr = []
-            await getDocs(collection(firestore, "roomData")).then(querySnapshot => {
+            
+
+            await getDocs(collection(firebase, "roomData")).then(querySnapshot => {
                 querySnapshot.forEach((doc) => {
                     arr.push(doc.data())
                 });
@@ -24,8 +26,6 @@ function Home() {
         }
         getData()
     }, [])
-    // console.log("Look This ");
-    // console.log(roomMapped)
 
     
     const navigate = useNavigate()
@@ -43,13 +43,27 @@ function Home() {
     
     const createDraft = () => {
         let arr = [...roomMapped]
+        const docRef = addDoc(collection(firebase, "roomData"), {
+            cssText: "",
+            htmlText: "",
+            jsText: '',
+            optionState: false,
+            template: selectedTemplate,
+            timeStamp : getTimeStamp(),
+            title: roomName
+        });
         arr.push({
-            title : roomName,
-            timeStamp : getTimeStamp,
-            template : selectedTemplate,
-            optionState : false
+            cssText: "",
+            htmlText: "",
+            jsText: '',
+            optionState: false,
+            template: selectedTemplate,
+            timeStamp : getTimeStamp(),
+            title: roomName
         })
         setRoomMapped(() => arr)
+        console.log(arr)
+        setRoomMapped(arr)
     }
     const nameChange = (event) => {
         setRoomName(event.target.value)

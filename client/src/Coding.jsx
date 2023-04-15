@@ -8,31 +8,13 @@ import Modal from './modal'
 import { useLocation, Link } from 'react-router-dom';
 
 //for test firebase
-import { firestore } from './firebase.js';
+import { firebase } from './firebase.js';
 import {addDoc, collection} from "@firebase/firestore"
 //for test firebase
 
 
 const Coding = () => {
-    // for test firebase
-    const messageRef = useRef();
-    const ref = collection(firestore, "test_messages");
-    const handleSave = async (e) => {
-        e.preventDefault();
-        console.log(messageRef.current.value);
 
-        let data = {
-            message: messageRef.current.value
-        }
-
-        try{
-            addDoc(ref, data);
-            console.log(ref)
-        } catch(e) {
-            console.log(e)
-        }
-    }
-    //for test firebase
 
 
     const location = useLocation()
