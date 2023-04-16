@@ -13,3 +13,6 @@ version 0.1.2
 version 0.1.3
 - save code draft to firebase
 - can delete draft 
+
+version 0.1.4
+- export as zip file

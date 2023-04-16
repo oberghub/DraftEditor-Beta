@@ -7,6 +7,7 @@ import { duotoneLight } from '@uiw/codemirror-theme-duotone';
 import Modal from './modal'
 import { useLocation, Link } from 'react-router-dom';
 
+import JSZip from "jszip";
 //for test firebase
 import { firebase } from './firebase.js';
 import { updateDoc, collection, doc } from "@firebase/firestore"
@@ -18,6 +19,7 @@ const Coding = () => {
     const [htmlText, setHtmlText] = useState(location.state.data.htmlText)
     const [cssText, setCssText] = useState(location.state.data.cssText)
     const [jsText, setJsText] = useState(location.state.data.jsText)
+    const [zipFileModal, setZipFileModal] = useState(false)
 
     const [openModal, setOpenModal] = useState(false)
 
@@ -30,19 +32,38 @@ const Coding = () => {
             <script>${jsText}</script>
         </html>
     `
-    // useEffect(() => {}, [])
-    const submitjs = () => {
-        exportFile("text/javascript")
-    }
-    const exportFile = (fileType) => {
-        const blob = new Blob([jsText], {
-            type: fileType
+    const exportFile = () => {
+        let htmlStruct = 
+        `
+        <!DOCTYPE HTML>
+        <html>
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <link rel="stylesheet" type="text/css" href="${cssFileName}.css">
+                <title>My Website</title>
+                <!--Don't forget to format document before use html code-->
+            </head>
+            <body>
+                ${htmlText}
+                <script src="${jsFileName}.js"></script>
+            </body>
+        </html>
+        `
+        let zip = new JSZip()
+        zip.file(htmlFileName+".html", htmlStruct)
+        zip.file(cssFileName+".css", cssText)
+        zip.file(jsFileName+".js", jsText)
+        zip.file("hello.py", `print("Hello World")`)
+        zip.generateAsync({type : 'blob'})
+        .then((content) => {
+            const link = document.createElement("a");
+            link.download = "example.zip";
+            link.href = URL.createObjectURL(content);
+            link.click();
         })
-        const fileUrl = URL.createObjectURL(blob)
-        const link = document.createElement("a")
-        link.download = "script"
-        link.href = fileUrl
-        link.click()
+        setZipFileModal(false)
+        setHtmlFileName(""), setCssFileName(""), setJsFileName("")
     }
     const [saved, setSaved] = useState("บันทึก")
     const saveDraft = () => {
@@ -63,10 +84,68 @@ const Coding = () => {
                 console.log(error);
             })
     }
+    const [htmlFileName, setHtmlFileName] = useState("")
+    const [cssFileName, setCssFileName] = useState("")
+    const [jsFileName, setJsFileName] = useState("")
+    const htmlFileNameChange = (event) => {
+        setHtmlFileName(event.target.value)
+    }
+    const cssFileNameChange = (event) => {
+        setCssFileName(event.target.value)
+    }
+    const jsFileNameChange = (event) => {
+        setJsFileName(event.target.value)
+    }
+    const generateFileName = () =>{
+        setHtmlFileName("index")
+        setCssFileName("style")
+        setJsFileName("script")
+    }
     const [optionState, setOptionState] = useState(false)
     return (
         <>
             <Modal open={openModal} onClose={() => setOpenModal(false)}></Modal>
+            {zipFileModal ?
+                <div className="overlay">
+                    <div className="modalcontainer" style={{ padding: '2em', position: 'relative', width: '500px', height: '600px' }}>
+                        <div>
+                            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between' }}>
+                                <div style={{ color: '#353535', fontSize: '24px' }}>นำออกแบบ Zip</div>
+                                <div style={{ cursor: 'pointer', color: '#353535', fontSize: '24px' }} onClick={() => { setZipFileModal(!zipFileModal) }}>X</div>
+                            </div>
+                            <div style={{ width: '100%', marginTop: '15px', marginBottom: '10px', color: '#353535' }}>
+                                ตั้งชื่อไฟล์ของคุณ หรือ <u style={{cursor : 'pointer'}} onClick={() => {generateFileName()}}>ให้เราตั้งชื่อให้</u>
+                            </div>
+                            <div style={{marginBottom : '1em'}}>
+                                <input type='text' style={{
+                                    width: '40%', border: '1px solid lightgray', borderRadius: '3px', height: '40px', fontSize: '16px',
+                                    paddingLeft: '15px'
+                                }} onChange={htmlFileNameChange} value={htmlFileName} />.html
+                            </div>
+                            <div style={{marginBottom : '1em'}}>
+                                <input type='text' style={{
+                                    width: '40%', border: '1px solid lightgray', borderRadius: '3px', height: '40px', fontSize: '16px',
+                                    paddingLeft: '15px'
+                                }} onChange={cssFileNameChange} value={cssFileName} />.css
+                            </div>
+                            <div style={{marginBottom : '1em'}}>
+                                <input type='text' style={{
+                                    width: '40%', border: '1px solid lightgray', borderRadius: '3px', height: '40px', fontSize: '16px',
+                                    paddingLeft: '15px'
+                                }} onChange={jsFileNameChange} value={jsFileName} />.js
+                            </div>
+                            <div style={{
+                                width: '100px', height: '40px', cursor: 'pointer',
+                                backgroundColor: '#5cb86b', color: 'white', borderRadius: '5px', display: 'flex',
+                                justifyContent: 'center', alignItems: 'center', position : 'absolute', right : 20, bottom : 20
+                            }} onClick={() => {exportFile()}}>
+                                ยืนยัน
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                :
+                null}
             <div className="top-container">
                 <Link to={"/"} className='text-top-container' style={{ cursor: 'pointer' }}>กลับหน้าหลัก</Link>
                 <div className='text-top-container' onClick={() => { console.log(location.state.data); }}>
@@ -144,7 +223,7 @@ const Coding = () => {
                                     color: '#fff', fontSize: '16px', width: '100%', height: '30px',
                                     borderBottom: '1px solid white', marginTop: '5px', cursor: 'pointer',
                                     marginBottom : '0.5em'
-                                }}>นำออก</div>
+                                }} onClick={() => {setZipFileModal(!zipFileModal)}}>นำออก</div>
                             </div>
                             : null}
                     </div>
