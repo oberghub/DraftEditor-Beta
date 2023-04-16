@@ -1,4 +1,6 @@
 # DraftEditor-Demo (demo ก็คือ demo นะครับโผมม demo มีแค่ 2 หน้าแต่ไม่ 2 ใจ)
+video
+- https://drive.google.com/file/d/1y5SVHR71s838QMvidNFtUZzmnEZo8jns/view?usp=sharing
 version 0.1.0
 - create simple code editor .js
 - ~~export (download) .js file to your PC.~~
