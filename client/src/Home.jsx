@@ -4,27 +4,22 @@ import { Combobox, DropdownList } from 'react-widgets';
 
 //for test firebase
 import { firebase} from './firebase.js';
-import {doc, addDoc, getDocs, collection, serverTimestamp} from "@firebase/firestore"
+import {doc, addDoc, getDocs, collection, onSnapshot, query, deleteDoc} from "@firebase/firestore"
 //for test firebase
 
 
 function Home() {
-    // const [itemRooms, setItemRooms] = useState([]);
     const [roomMapped, setRoomMapped] = useState([])
     //read
     useEffect(() => {
-        async function getData() {
-            const arr = []
-            
-
-            await getDocs(collection(firebase, "roomData")).then(querySnapshot => {
-                querySnapshot.forEach((doc) => {
-                    arr.push(doc.data())
-                });
-                setRoomMapped(() => arr)
-            })
+        const getRoomData = query(collection(firebase, "roomData"))
+        const snap = onSnapshot(getRoomData, (snapshot) => {
+            setRoomMapped(snapshot.docs.map(doc => ({id : doc.id, ...doc.data()})))
+        })
+        return () => {
+            //unsubscribe
+            snap()
         }
-        getData()
     }, [])
 
     
@@ -40,10 +35,16 @@ function Home() {
         arr[index].optionState = state
         setRoomMapped(arr)
     }
-    
+    async function removeDraft(docId) {
+        if(confirm("ต้องการลบแบบร่างนี้ใช่หรือไม่")){
+            await deleteDoc(doc(firebase, "roomData", docId))
+        }
+        else{
+            console.log("nahh");
+        }
+    }
     const createDraft = () => {
-        let arr = [...roomMapped]
-        const docRef = addDoc(collection(firebase, "roomData"), {
+        let roomData = {
             cssText: "",
             htmlText: "",
             jsText: '',
@@ -51,19 +52,12 @@ function Home() {
             template: selectedTemplate,
             timeStamp : getTimeStamp(),
             title: roomName
-        });
-        arr.push({
-            cssText: "",
-            htmlText: "",
-            jsText: '',
-            optionState: false,
-            template: selectedTemplate,
-            timeStamp : getTimeStamp(),
-            title: roomName
+        }
+        addDoc(collection(firebase, "roomData"), roomData).then(() => {
+            navigate("/coding", {state : {data : roomData}})
+        }).catch((error) => {
+            console.log(error)
         })
-        setRoomMapped(() => arr)
-        console.log(arr)
-        setRoomMapped(arr)
     }
     const nameChange = (event) => {
         setRoomName(event.target.value)
@@ -119,7 +113,7 @@ function Home() {
                 <div style={{ width: '1660px', display: 'flex', padding: '2em', borderBottom: '0.5px solid gray' }}>
                     <div style={{ width: '100%', color: 'white', }}>
                         <div style={{ fontSize: '24px' }} onClick={() => {getTimeStamp()}}>
-                            DraftEditor (Beta)
+                            DraftEditor (Demo)
                         </div>
                     </div>
                 </div>
@@ -148,7 +142,7 @@ function Home() {
                     {roomMapped.map((item, index) => {
                         return (
                             <>
-                                <div key={item} style={{ width: '100%', height: '200px', backgroundColor: '#e1e1e1', position: 'relative' }}>
+                                <div key={item.id} style={{ width: '100%', height: '200px', backgroundColor: '#e1e1e1', position: 'relative' }}>
                                     <div style={{
                                         width: '100%', display: 'flex', justifyContent: 'space-between', backgroundColor: 'transparent',
                                         padding: '1em', color: 'white'
@@ -160,6 +154,10 @@ function Home() {
                                             <div style={{ width: '5px', height: '5px', borderRadius: '100%', backgroundColor: '#353535' }} />
                                             <div style={{ width: '5px', height: '5px', borderRadius: '100%', backgroundColor: '#353535' }} />
                                         </div>
+                                    </div>
+
+                                    <div style={{fontSize : '12px', paddingLeft : '1.3em', marginTop : '-1.5em'}}>
+                                        ({item.id})
                                     </div>
 
                                     <div style={{
@@ -190,7 +188,7 @@ function Home() {
                                             <div style={{ cursor: 'pointer', padding: '5px', borderBottom: '1px solid #e1e1e1', display: 'grid', placeItems: 'center', backgroundColor: '#d1d1d1', color: '#353535' }}>
                                                 แก้ไข
                                             </div>
-                                            <div style={{ cursor: 'pointer', padding: '5px', borderBottom: '1px solid #e1e1e1', display: 'grid', placeItems: 'center', backgroundColor: '#d1d1d1', color: 'red' }}>
+                                            <div onClick={() => {removeDraft(item.id)}} style={{ cursor: 'pointer', padding: '5px', borderBottom: '1px solid #e1e1e1', display: 'grid', placeItems: 'center', backgroundColor: '#d1d1d1', color: 'red' }}>
                                                 ลบ
                                             </div>
                                         </div>
