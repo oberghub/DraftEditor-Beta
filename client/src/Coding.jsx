@@ -54,7 +54,6 @@ const Coding = () => {
         zip.file(htmlFileName+".html", htmlStruct)
         zip.file(cssFileName+".css", cssText)
         zip.file(jsFileName+".js", jsText)
-        zip.file("hello.py", `print("Hello World")`)
         zip.generateAsync({type : 'blob'})
         .then((content) => {
             const link = document.createElement("a");
